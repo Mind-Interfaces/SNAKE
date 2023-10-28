@@ -10,10 +10,10 @@ def initialize_game():
     """
     Initialize OpenGL settings and game objects.
     """
-    global snake, food
+    global snake, food, constants
     pygame.init()
     # Set display size and mode
-    display = (800, 600)
+    display = (SCREEN_WIDTH, SCREEN_HEIGHT)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     # Initialize snake and food objects
     snake = Snake()
