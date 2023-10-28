@@ -3,8 +3,9 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
-from snake import Snake
-from food import Food
+from snake import Snake  # Make sure the Snake class is in the same directory or properly imported
+from food import Food  # Make sure the Food class is in the same directory or properly imported
+
 
 def initialize_game():
     """
@@ -15,6 +16,11 @@ def initialize_game():
     # Set display size and mode
     display = (SCREEN_WIDTH, SCREEN_HEIGHT)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
+    
+    # Configure initial OpenGL settings
+    glClearColor(0.0, 0.0, 0.0, 1.0)
+    glEnable(GL_DEPTH_TEST)
+    
     # Initialize snake and food objects
     snake = Snake()
     food = Food()
@@ -35,15 +41,19 @@ def game_loop():
         food.update()
         
         # Clear the screen
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Draw game objects
         snake.draw()
         food.draw()
         
+        # Update the display
         pygame.display.flip()
+        
+        # Delay to create animation effect
         pygame.time.wait(10)
 
 if __name__ == "__main__":
     initialize_game()
     game_loop()
+
