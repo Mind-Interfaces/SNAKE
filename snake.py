@@ -2,6 +2,7 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 
+
 class CubeFace(Enum):
     FRONT = 1
     BACK = 2
@@ -9,6 +10,7 @@ class CubeFace(Enum):
     RIGHT = 4
     TOP = 5
     BOTTOM = 6
+
 
 class Snake:
     """
@@ -48,21 +50,44 @@ class Snake:
             self.body.insert(0, new_head)
             self.body.pop()
 
+    # Define the size of each face of the cube
+    face_size = 2
+    
     def has_reached_edge(self, position):
         """
         Check if the snake has reached the edge of the current face.
         """
-        # Placeholder for logic to check if the position is at the edge
-        # and needs to transition to another face
-        pass
+        # Using the size of the cube face to determine if the snake has reached an edge
+        x, y, _ = position
+        if abs(x) > self.face_size / 2 or abs(y) > self.face_size / 2:
+            return True
+        return False
 
     def transition_face(self, position):
         """
         Transition the snake to a different face of the cube.
         """
-        # Placeholder for logic to change the current face of the snake
-        # and update the position to reflect this transition
-        pass
+        # Calculate which face the snake should transition to
+        x, y, _ = position
+        if x > self.face_size / 2:
+            self.current_face = CubeFace.RIGHT
+            position[0] = -self.face_size / 2  # Move snake to the left edge of the new face
+        elif x < -self.face_size / 2:
+            self.current_face = CubeFace.LEFT
+            position[0] = self.face_size / 2
+        elif y > self.face_size / 2:
+            self.current_face = CubeFace.TOP
+            position[1] = -self.face_size / 2
+        elif y < -self.face_size / 2:
+            self.current_face = CubeFace.BOTTOM
+            position[1] = self.face_size / 2
+        
+        # Correct the snake's body segments to be within the new face
+        for segment in self.body:
+            segment[0] = max(min(segment[0], self.face_size / 2), -self.face_size / 2)
+            segment[1] = max(min(segment[1], self.face_size / 2), -self.face_size / 2)
+
+    # ... [rest of the Snake class] ...
 
     def draw(self):
         """
