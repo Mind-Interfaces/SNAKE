@@ -3,9 +3,10 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLUT import *
+
 from snake import Snake  # Make sure the Snake class is in the same directory or properly imported
 from food import Food  # Make sure the Food class is in the same directory or properly imported
-
+from cube import Cube  # Make sure the Cube class is in the same directory or properly imported
 
 def initialize_game():
     """
@@ -44,6 +45,7 @@ def game_loop():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         
         # Draw game objects
+        cube.draw()  # Make sure the cube is drawn in the correct context
         snake.draw()
         food.draw()
         
