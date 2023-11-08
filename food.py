@@ -2,37 +2,46 @@
 import random
 from OpenGL.GL import *
 from OpenGL.GLUT import *
-from cube import CubeFace  # Assuming CubeFace Enum is defined in the cube.py file
+from cube import CubeFace  # Make sure the CubeFace Enum is available in the cube.py file
 
 class Food:
     """
     Class for Food object.
     """
 
-    def __init__(self):
-        # Initialize the food's position on one of the cube's faces.
+    def __init__(self, cube_size):
+        self.cube_size = cube_size
         self.position = self.randomize_position()
+        self.face = CubeFace.FRONT
 
     def randomize_position(self):
         """
         Randomize the food's position on one of the cube's faces.
         """
         # Choose a random face for the food to appear on
-        face = random.choice(list(CubeFace))
+        self.face = random.choice(list(CubeFace))
+        
+        # Generate coordinates within the bounds of the cube face
+        x = random.uniform(-self.cube_size / 2, self.cube_size / 2)
+        y = random.uniform(-self.cube_size / 2, self.cube_size / 2)
 
-        # Depending on the chosen face, set the food's position within the face's bounds
-        # The Z coordinate is determined by the face, while X and Y are within face bounds
-        if face == CubeFace.FRONT:
-            return [random.uniform(-1, 1), random.uniform(-1, 1), -1]
-        elif face == CubeFace.BACK:
-            return [random.uniform(-1, 1), random.uniform(-1, 1), 1]
-        # Add logic for other faces...
-        # ...
+        # Map the face to a position on the cube
+        if self.face == CubeFace.FRONT:
+            return [x, y, -self.cube_size / 2]
+        elif self.face == CubeFace.BACK:
+            return [x, y, self.cube_size / 2]
+        elif self.face == CubeFace.LEFT:
+            return [-self.cube_size / 2, x, y]
+        elif self.face == CubeFace.RIGHT:
+            return [self.cube_size / 2, x, y]
+        elif self.face == CubeFace.TOP:
+            return [x, self.cube_size / 2, y]
+        elif self.face == CubeFace.BOTTOM:
+            return [x, -self.cube_size / 2, y]
 
     def update(self):
         """
         Regenerate food at a new location if needed.
-        Here, I've assumed you would call this method when the food is eaten by the snake.
         """
         # Regenerate the food's position on one of the cube's faces.
         self.position = self.randomize_position()
@@ -41,13 +50,8 @@ class Food:
         """
         Render the food object using OpenGL.
         """
-
-        # Initialize OpenGL color to red for the food.
-        glColor3f(1.0, 0.0, 0.0)
-
-        # Translate to the food's position in 3D space and render it as a small sphere.
+        glColor3f(1.0, 0.0, 0.0)  # Set color to red for the food
         glPushMatrix()
-        glTranslatef(*self.position)
-        glutSolidSphere(0.1, 20, 20)  # Draw food with radius 0.1
+        glTranslate(*self.position)
+        glutSolidSphere(0.1, 20, 20)  # Draw food with a small radius
         glPopMatrix()
-
